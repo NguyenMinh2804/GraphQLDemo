@@ -3,9 +3,11 @@ using GraphQLDemo.Model;
 using GraphQLDemo.OutPut;
 using HotChocolate;
 using HotChocolate.Data;
+using HotChocolate.Subscriptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace GraphQLDemo.GraphQL
@@ -13,12 +15,13 @@ namespace GraphQLDemo.GraphQL
     public class Mutation
     {
         [UseDbContext(typeof(DatabaseContext))]
-        public async Task<AddClassPayload> AddClass ([ScopedService] DatabaseContext databaseContext, AddClassInput classInput)
+        public async Task<AddClassPayload> AddClass ([ScopedService] DatabaseContext databaseContext, AddClassInput classInput, [Service] ITopicEventSender eventSender, CancellationToken cancellationToken)
         {
             Class @class = new Class();
             @class.Name = classInput.Name;
             databaseContext.Classes.Add(@class);
             await databaseContext.SaveChangesAsync();
+            await eventSender.SendAsync(nameof(Subscription.OnListAdded), @class, cancellationToken);
             return new AddClassPayload(@class);
         }
 

@@ -29,9 +29,11 @@ namespace GraphQLDemo
                 .AddGraphQLServer()
                 .AddQueryType<Query>()
                 .AddMutationType<Mutation>()
+                .AddSubscriptionType<Subscription>()
                 .AddProjections()
                 .AddSorting()
-                .AddFiltering();
+                .AddFiltering()
+                .AddInMemorySubscriptions();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -40,7 +42,7 @@ namespace GraphQLDemo
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseWebSockets();
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
