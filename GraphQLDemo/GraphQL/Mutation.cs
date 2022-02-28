@@ -21,7 +21,7 @@ namespace GraphQLDemo.GraphQL
             @class.Name = classInput.Name;
             databaseContext.Classes.Add(@class);
             await databaseContext.SaveChangesAsync();
-            await eventSender.SendAsync(nameof(Subscription.OnListAdded), @class, cancellationToken);
+            await eventSender.SendAsync(nameof(Subscription.OnClassAdded), @class, cancellationToken);
             return new AddClassPayload(@class);
         }
 

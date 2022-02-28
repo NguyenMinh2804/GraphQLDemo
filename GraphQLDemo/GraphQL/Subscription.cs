@@ -12,6 +12,6 @@ namespace GraphQLDemo.GraphQL
     {
         [Subscribe]
         [Topic]
-        public Class OnListAdded([EventMessage] Class Class) => Class;
+        public Class OnClassAdded([EventMessage] Class Class) => Class;
     }
 }
